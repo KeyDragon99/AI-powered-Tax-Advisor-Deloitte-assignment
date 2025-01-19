@@ -53,6 +53,21 @@
       </div>
       <button type="submit">Submit</button>
     </form>
+
+    <!-- Modal -->
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Submission Summary</h2>
+        <p><strong>Income:</strong> {{ formData.income }}</p>
+        <p><strong>Expenses:</strong> {{ formData.expenses }}</p>
+        <p><strong>Filing Status:</strong> {{ formData.filingStatus }}</p>
+        <p><strong>Dependents:</strong> {{ formData.dependents }}</p>
+        <p><strong>Withholding:</strong> {{ formData.withholding }}</p>
+        <p><strong>Other Income:</strong> {{ formData.otherIncome }}</p>
+        <p><strong>Tax Credits:</strong> {{ formData.taxCredits }}</p>
+        <button @click="closeModal">Close</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,14 +85,15 @@ export default {
         otherIncome: "",
         taxCredits: "",
       },
+      showModal: false,
     };
   },
   methods: {
     handleSubmit() {
-      console.log("Form Data:", this.formData);
-      alert(
-        `Income: ${this.formData.income}\nExpenses: ${this.formData.expenses}\nFiling Status: ${this.formData.filingStatus}\nDependents: ${this.formData.dependents}\nWithholding: ${this.formData.withholding}\nOther Income: ${this.formData.otherIncome}\nTax Credits: ${this.formData.taxCredits}`
-      );
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
     },
   },
 };
@@ -101,5 +117,33 @@ button {
 }
 button:hover {
   background-color: #0056b3;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+}
+.modal-content h2 {
+  margin-bottom: 15px;
+}
+.modal-content button {
+  margin-top: 15px;
 }
 </style>
