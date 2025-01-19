@@ -1,55 +1,22 @@
 <template>
-  <div>
+  <div class="tax-form-page">
     <h1>Tax Information Form</h1>
-    <form @submit.prevent="handleSubmit">
-      <div>
-        <label for="income">Income:</label>
-        <input type="number" id="income" v-model="formData.income" required />
-      </div>
-      <div>
-        <label for="expenses">Expenses:</label>
+    <form @submit.prevent="handleSubmit" class="form-container">
+      <div class="form-group" v-for="(label, field) in formLabels" :key="field">
+        <label :for="field">{{ label }}:</label>
         <input
+          v-if="field !== 'filingStatus'"
           type="number"
-          id="expenses"
-          v-model="formData.expenses"
-          required
+          :id="field"
+          v-model="formData[field]"
+          :required="field !== 'otherIncome' && field !== 'taxCredits'"
         />
-      </div>
-      <div>
-        <label for="filingStatus">Filing Status:</label>
-        <select id="filingStatus" v-model="formData.filingStatus" required>
+        <select v-else :id="field" v-model="formData[field]" required>
           <option value="">Select</option>
           <option value="single">Single</option>
           <option value="married">Married</option>
           <option value="headOfHousehold">Head of Household</option>
         </select>
-      </div>
-      <div>
-        <label for="dependents">Number of Dependents:</label>
-        <input
-          type="number"
-          id="dependents"
-          v-model="formData.dependents"
-          min="0"
-          required
-        />
-      </div>
-      <div>
-        <label for="withholding">Tax Withholding:</label>
-        <input
-          type="number"
-          id="withholding"
-          v-model="formData.withholding"
-          required
-        />
-      </div>
-      <div>
-        <label for="otherIncome">Other Income:</label>
-        <input type="number" id="otherIncome" v-model="formData.otherIncome" />
-      </div>
-      <div>
-        <label for="taxCredits">Tax Credits:</label>
-        <input type="number" id="taxCredits" v-model="formData.taxCredits" />
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -58,13 +25,9 @@
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
         <h2>Submission Summary</h2>
-        <p><strong>Income:</strong> {{ formData.income }}</p>
-        <p><strong>Expenses:</strong> {{ formData.expenses }}</p>
-        <p><strong>Filing Status:</strong> {{ formData.filingStatus }}</p>
-        <p><strong>Dependents:</strong> {{ formData.dependents }}</p>
-        <p><strong>Withholding:</strong> {{ formData.withholding }}</p>
-        <p><strong>Other Income:</strong> {{ formData.otherIncome }}</p>
-        <p><strong>Tax Credits:</strong> {{ formData.taxCredits }}</p>
+        <p v-for="(label, field) in formLabels" :key="field">
+          <strong>{{ label }}:</strong> {{ formData[field] }}
+        </p>
         <button @click="closeModal">Close</button>
       </div>
     </div>
@@ -86,6 +49,15 @@ export default {
         taxCredits: "",
       },
       showModal: false,
+      formLabels: {
+        income: "Income",
+        expenses: "Expenses",
+        filingStatus: "Filing Status",
+        dependents: "Number of Dependents",
+        withholding: "Tax Withholding",
+        otherIncome: "Other Income",
+        taxCredits: "Tax Credits",
+      },
     };
   },
   methods: {
@@ -100,19 +72,50 @@ export default {
 </script>
 
 <style scoped>
-form {
+.tax-form-page {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 30px;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 }
 label {
-  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+input,
+select {
+  font-size: 1.2em;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 button {
   background-color: #007bff;
   color: white;
-  padding: 10px;
+  font-size: 1.2em;
+  padding: 10px 20px;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 button:hover {
