@@ -1,0 +1,14 @@
+# Logs
+
+node_modules
+dist
+package.json
+package-lock.json
+jsconfig.json
+index.html
+vite.config.js
+public/*
+# Editor directories and files
+.vscode/*
+# !.vscode/extensions.json
+/src/views/*

@@ -1,0 +1,7 @@
+__pycache__/
+prefect-env/
+.prefectignore
+.idea/
+*.txt
+*.tsv
+*.csv
