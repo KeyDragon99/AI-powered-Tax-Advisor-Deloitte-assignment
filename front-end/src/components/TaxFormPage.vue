@@ -21,6 +21,8 @@
       <button type="submit">Submit</button>
     </form>
 
+    <button class="back-button" @click="goHome">Back to Home</button>
+
     <!-- Modal -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
@@ -66,6 +68,9 @@ export default {
     },
     closeModal() {
       this.showModal = false;
+    },
+    goHome() {
+      this.$router.push("/");
     },
   },
 };
@@ -120,6 +125,18 @@ button {
 }
 button:hover {
   background-color: #0056b3;
+}
+
+.back-button {
+  margin-top: 20px;
+  position: fixed;
+  top: 25px;
+  left: 50px;
+  background-color: #6c757d;
+  font-size: 1em;
+}
+.back-button:hover {
+  background-color: #5a6268;
 }
 
 /* Modal Styles */

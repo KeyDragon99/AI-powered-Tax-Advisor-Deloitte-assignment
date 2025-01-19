@@ -6,14 +6,19 @@
       our AI powered advisor.
     </p>
     <p class="help-text">Navigate to the tax form to get started.</p>
-    <button><router-link to="/tax-form">Go to Tax Form</router-link></button>
     <p class="signature">Made by Giazitzis Symeon</p>
+    <button class="tax-form-button" @click="gotaxform">Go to Tax Form</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "HomePage",
+  methods: {
+    gotaxform() {
+      this.$router.push("/tax-form");
+    },
+  },
 };
 </script>
 
@@ -31,21 +36,18 @@ export default {
 }
 h1 {
   font-size: 2.5em;
-  position: fixed;
-  top: 70px;
+  margin-top: 100px;
   color: #333;
-  margin: 50px;
 }
 .text1 {
-  position: fixed;
+  margin-top: 100px;
   font-size: 1.5em;
-  top: 300px;
   color: #000000;
 }
 .help-text {
-  position: fixed;
+  margin-top: 70px;
+  margin-bottom: 0px;
   font-size: 1.5em;
-  top: 400px;
   color: #000000;
 }
 .signature {
@@ -56,18 +58,17 @@ h1 {
   bottom: 20px;
   color: #0e3606;
 }
-button {
+.tax-form-button {
   background-color: #55a713;
-  position: fixed;
   color: white;
   font-size: 1.2em;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  top: 480px;
   cursor: pointer;
+  margin-top: 13px;
 }
-button:hover {
+.tax-form-button:hover {
   background-color: #0a6d17;
 }
 </style>
