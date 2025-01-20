@@ -11,10 +11,24 @@
           :step="0.01"
           :min="0"
           v-model.number="formData[field]"
-          :required="field !== 'otherIncome' && field !== 'taxCredits'"
+          :required="
+            field !== 'otherIncome' &&
+            field !== 'taxCredits' &&
+            !(
+              field === 'employmentIcome' ||
+              field === 'pensionIncome' ||
+              field === 'businessProfits'
+            ) &&
+            field !== 'rentalIncome' &&
+            field !== 'investmentIncome' &&
+            field !== 'medicalExpenses' &&
+            field !== 'educationExpenses' &&
+            field !== 'donations' &&
+            field !== 'taxWithheld'
+          "
         />
         <input
-          v-else-if="field == 'dependents'"
+          v-else-if="field === 'dependents'"
           type="number"
           :id="field"
           :step="1"
@@ -24,8 +38,8 @@
         <select v-else :id="field" v-model="formData[field]" required>
           <option value="">Select</option>
           <option value="single">Single</option>
-          <option value="married">Married</option>
-          <option value="headOfHousehold">Head of Household</option>
+          <option value="marriedJoint">Married</option>
+          <option value="marriedSeparate">Head of Household</option>
         </select>
       </div>
       <button type="submit">Submit</button>
@@ -65,25 +79,33 @@ export default {
   data() {
     return {
       formData: {
-        income: 0.0,
-        expenses: 0.0,
         filingStatus: "",
+        employmentIncome: 0.0,
+        pensionIncome: 0.0,
+        businessProfits: 0.0,
+        rentalIncome: 0.0,
+        investmentIncome: 0.0,
+        medicalExpenses: 0.0,
+        educationExpenses: 0.0,
+        donations: 0.0,
+        taxWithheld: 0.0,
         dependents: 0,
-        withholding: 0.0,
-        otherIncome: 0.0,
-        taxCredits: 0.0,
       },
       // showModal: false,
       showResultsModal: false,
       results: {},
       formLabels: {
-        income: "Income",
-        expenses: "Expenses",
         filingStatus: "Filing Status",
-        dependents: "Number of Dependents",
-        withholding: "Tax Withholding",
-        otherIncome: "Other Income",
-        taxCredits: "Tax Credits",
+        employmentIncome: "Employment Income",
+        pensionIncome: "Pension Income",
+        businessProfits: "Buniness Profits",
+        rentalIncome: "Rental Income",
+        investmentIncome: "Investment Income",
+        medicalExpenses: "Medical Expenses",
+        educationExpenses: "Education Expenses",
+        donations: "Donations",
+        taxWithheld: "Tax Withheld",
+        dependents: "Dependents",
       },
     };
   },
@@ -121,8 +143,8 @@ export default {
 <style scoped>
 .tax-form-page {
   margin: auto;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -137,9 +159,9 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
 }
 .form-group {
   display: flex;
@@ -164,6 +186,7 @@ button {
   color: white;
   font-size: 1.2em;
   padding: 10px 20px;
+  margin-bottom: 50px;
   border: none;
   border-radius: 5px;
   cursor: pointer;

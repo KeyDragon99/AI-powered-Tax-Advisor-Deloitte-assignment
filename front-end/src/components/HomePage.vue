@@ -6,34 +6,38 @@
       our AI powered advisor.
     </p>
     <h2>Explanation of Each Input Item for the Tax Calculator</h2>
-    <ul>
+    <ul class="ul1">
       <li>
-        Income: The total gross income earned by the user, including salaries,
-        wages, bonuses, etc.
+        Income Sources:
+        <ul class="ul2">
+          <li>Employment Income: Salaries and wages.</li>
+          <li>Pension Income: Retirement benefits.</li>
+          <li>
+            Business Profits: Income from self-employment or business
+            activities.
+          </li>
+          <li>Rental Income: Earnings from property rentals.</li>
+          <li>Investment Income: Dividends, interest, etc.</li>
+        </ul>
       </li>
       <li>
-        Expenses: Allowable deductions or business expenses that reduce taxable
-        income, such as rent, utilities, or supplies.
+        Deductions and Allowances:
+        <ul class="ul3">
+          <li>Medical Expenses: Certain medical costs may be deductible.</li>
+          <li>Education Expenses: Tuition fees for dependent children.</li>
+          <li>
+            Donations: Charitable contributions to approved organizations.
+          </li>
+        </ul>
       </li>
       <li>
-        Filing Status: The user’s tax filing status (e.g., single, married, head
-        of household). This impacts tax brackets and standard deductions.
+        Filing Status: Options include Single, Married Filing Jointly, or
+        Married Filing Separately.
       </li>
+      <li>Tax Withheld: Total tax already withheld from income sources.</li>
       <li>
-        Number of Dependents: The number of dependents (e.g., children or
-        relatives) the user claims, which can affect tax credits or deductions.
-      </li>
-      <li>
-        Tax Withholding: The amount of income tax already withheld from the
-        user’s paychecks throughout the year.
-      </li>
-      <li>
-        Other Income: Additional income not included in gross income, such as
-        interest, dividends, or rental income.
-      </li>
-      <li>
-        Tax Credits: Direct reductions of tax liability, such as credits for
-        education or child care.
+        Dependents: Number of dependents, such as children, which can affect tax
+        calculations.
       </li>
     </ul>
     <p class="help-text">Navigate to the tax form to get started.</p>
@@ -77,25 +81,37 @@ h1 {
   color: #000000;
 }
 h2 {
-  margin-top: 50px;
+  margin-top: 10px;
   margin-bottom: 0px;
   color: #333;
 }
-ul {
+.ul1 {
   margin-top: 30px;
   margin-bottom: 0px;
-  font-size: 1.2em;
+  font-size: 1.5em;
+  color: #000000;
+}
+.ul2 {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  font-size: 1.1em;
+  color: #000000;
+}
+.ul3 {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  font-size: 1.1em;
   color: #000000;
 }
 li {
   margin-top: 0px;
   margin-bottom: 10px;
-  font-size: 1em;
+  font-size: 0.9em;
   text-align: left;
   color: #000000;
 }
 .help-text {
-  margin-top: 70px;
+  margin-top: 20px;
   margin-bottom: 0px;
   font-size: 1.5em;
   color: #000000;
