@@ -8,70 +8,74 @@ from flask_cors import CORS
 from datetime import datetime as dt
 import os.path, threading, requests, sys, signal, time, socket
 
-
 app = Flask(__name__)                                                       #Initialize the flask application for the API
+api = Api(app)
 CORS(app)
 
 '''Define request parser values and their properties for ADD, PUT, POST, DELETE requests'''
-add_rqp = reqparse.RequestParser()                                          
-add_rqp.add_argument('name', type=str, required=True, help='Name is required in order to add an ingredient.')                       
-add_rqp.add_argument('quantity', type=int)
-add_rqp.add_argument('comment', type=str)
-
-del_rqp = reqparse.RequestParser()                                          
-del_rqp.add_argument('name', type=str, required=True, help='Name is required in order to delete an ingredient.')
-
-update_rqp = reqparse.RequestParser()
-update_rqp.add_argument('name', type=str)
-update_rqp.add_argument('quantity', type=int)
-update_rqp.add_argument('comment', type=str)
-update_rqp.add_argument('iname', type=str, required=True)
-
-api = Api(app)
+rqp = reqparse.RequestParser()                                          
+rqp.add_argument('income', type=float, required=True, help="Income is required and should be a float.")                       
+rqp.add_argument('expenses', type=float, required=True, help="Expenses are required and should be a float.")
+rqp.add_argument('filingStatus', type=str, required=True, choices=('single', 'married', 'headOfHousehold'), help="Filing Status must be one of 'single', 'married', or 'headOfHousehold'.")
+rqp.add_argument('dependents', type=int, required=True, help="Dependents is required and should be an integer.")
+rqp.add_argument('withholding', type=float, required=True, help="Withholding is required and should be a float.")
+rqp.add_argument('otherIncome', type=float, default=0, help="Other Income should be a float.")
+rqp.add_argument('taxCredits', type=float, default=0, help="Tax Credits should be a float.")
 
 resource_fields = {                                                         #Define the resource fields that will be returned
-    'name': fields.String,
-    'quantity': fields.Integer,
-    'comment': fields.String
+    'taxableIncome': fields.Float,
+    'tax': fields.Float,
+    'taxOwed': fields.Float,
+    'refund': fields.Float
 }
 
-pagination_fields = {
-    'page': fields.Integer,
-    'itemsPerPage': fields.Integer,
-    'totalItems': fields.Integer,
-    'totalPages': fields.Integer
-}
+class TaxCalculator(Resource):
 
-response_fields = {
-    'data': fields.List(fields.Nested(resource_fields)),
-    'pagination': fields.Nested(pagination_fields)
-}
+    @marshal_with(resource_fields)
+    def cal_tax(self):
+        args = rqp.parse_args()
+        print(args)
+        standard_deductions = {
+            'single': 12550,
+            'married': 25100,
+            'headOfHousehold': 18800,
+        }
 
-class Ingredients(Resource):
+        tax_brackets = {
+            'single': [0.1, 0.12, 0.22],
+            'married': [0.1, 0.12, 0.22],
+            'headOfHousehold': [0.1, 0.12, 0.22],
+        }
 
-    @marshal_with(response_fields)
-    def retrieve_quantities(self):
-        
-        args = request.args
-        out = paginate(args)
+        adjusted_income = args['income'] + args['otherIncome'] - args['expenses']
+        standard_deduction = standard_deductions.get(args['filingStatus'], 12550)
+        taxable_income = max(0, adjusted_income - standard_deduction)
 
-        return out
+        tax_rate = tax_brackets[args['filingStatus']][0]
+        tax = taxable_income * tax_rate
+
+        dependent_deduction = args['dependents'] * 2000
+        tax = max(0, tax - dependent_deduction - args['taxCredits'])
+
+        tax_owed = max(0, tax - args['withholding'])
+        refund = max(0, args['withholding'] - tax)
+
+        return {
+            'taxableIncome': taxable_income,
+            'tax': tax,
+            'taxOwed': tax_owed,
+            'refund': refund
+        }, 200
 
     def dispatch_request(self, *args, **kwargs):
         # Override dispatch_request to route to the appropriate method
-        if request.method == 'GET':
-            return self.retrieve_quantities()                               # Call custom method for GET requests
-        elif request.method == 'POST':
-            return self.add_ingredient()                                    # Call custom method for DELETE requests
-        elif request.method == 'DELETE':
-            return self.delete_ingredient()                                 # Call custom method for DELETE requests
-        elif request.method == 'PUT':                                        
-            return self.update_ingredient()                                 # Call custom method for PUT requests
+        if request.method == 'POST':
+            return self.cal_tax()                                    # Call custom method for DELETE requests
         else:
-            return super(Ingredients, self).dispatch_request(*args, **kwargs)
+            return super(TaxCalculator, self).dispatch_request(*args, **kwargs)
 
-api.add_resource(Ingredients, "/Ingredients/retrieve", "/Ingredients/add_new", "/Ingredients/remove", "/Ingredients/update",
-                methods=['GET', 'POST', 'DELETE', 'PUT']) 
+api.add_resource(TaxCalculator, "/calculate-tax",
+                methods=['POST']) 
 
 
 if __name__ == "__main__":

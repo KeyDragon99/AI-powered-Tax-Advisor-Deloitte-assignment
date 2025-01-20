@@ -11,3 +11,4 @@ vite.config.js
 .vscode/*
 # !.vscode/extensions.json
 /src/views/*
+views/*

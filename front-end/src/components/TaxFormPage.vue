@@ -5,11 +5,21 @@
       <div class="form-group" v-for="(label, field) in formLabels" :key="field">
         <label :for="field">{{ label }}:</label>
         <input
-          v-if="field !== 'filingStatus'"
+          v-if="field !== 'filingStatus' && field !== 'dependents'"
           type="number"
           :id="field"
-          v-model="formData[field]"
+          :step="0.01"
+          :min="0"
+          v-model.number="formData[field]"
           :required="field !== 'otherIncome' && field !== 'taxCredits'"
+        />
+        <input
+          v-else-if="field == 'dependents'"
+          type="number"
+          :id="field"
+          :step="1"
+          :min="0"
+          v-model.number="formData[field]"
         />
         <select v-else :id="field" v-model="formData[field]" required>
           <option value="">Select</option>
@@ -23,8 +33,8 @@
 
     <button class="back-button" @click="goHome">Back to Home</button>
 
-    <!-- Modal -->
-    <div v-if="showModal" class="modal-overlay">
+    <!-- Modal 1-->
+    <!-- <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
         <h2>Submission Summary</h2>
         <p v-for="(label, field) in formLabels" :key="field">
@@ -32,25 +42,40 @@
         </p>
         <button @click="closeModal">Close</button>
       </div>
+    </div> -->
+    <!-- Modal 2-->
+    <div v-if="showResultsModal" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Tax Calculation Results</h2>
+        <p><strong>Taxable Income:</strong> {{ results.taxableIncome }}</p>
+        <p><strong>Tax:</strong> {{ results.tax }}</p>
+        <p><strong>Tax Owed:</strong> {{ results.taxOwed }}</p>
+        <p><strong>Refund:</strong> {{ results.refund }}</p>
+        <button @click="closeResultsModal">Close</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "TaxFormPage",
   data() {
     return {
       formData: {
-        income: "",
-        expenses: "",
+        income: 0.0,
+        expenses: 0.0,
         filingStatus: "",
         dependents: 0,
-        withholding: "",
-        otherIncome: "",
-        taxCredits: "",
+        withholding: 0.0,
+        otherIncome: 0.0,
+        taxCredits: 0.0,
       },
-      showModal: false,
+      // showModal: false,
+      showResultsModal: false,
+      results: {},
       formLabels: {
         income: "Income",
         expenses: "Expenses",
@@ -63,11 +88,28 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      this.showModal = true;
+    async handleSubmit() {
+      // this.showModal = true;
+      this.calculateTaxes();
     },
-    closeModal() {
-      this.showModal = false;
+    calculateTaxes() {
+      const apiUrl = "http://localhost:5000/calculate-tax"; // Replace with your backend URL
+      axios
+        .post(apiUrl, this.formData)
+        .then((response) => {
+          this.results = response.data; // Store the API results
+          this.showResultsModal = true; // Open the second modal
+        })
+        .catch((error) => {
+          console.error("Error calculating taxes:", error);
+          alert("Failed to calculate taxes. Please try again later.");
+        });
+    },
+    // closeModal() {
+    //   this.showModal = false;
+    // },
+    closeResultsModal() {
+      this.showResultsModal = false;
     },
     goHome() {
       this.$router.push("/");
