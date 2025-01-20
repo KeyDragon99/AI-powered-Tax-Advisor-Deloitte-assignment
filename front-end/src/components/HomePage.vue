@@ -5,6 +5,37 @@
       Calculate your taxes fast and efficiently. Get suggestions and advice from
       our AI powered advisor.
     </p>
+    <h2>Explanation of Each Input Item for the Tax Calculator</h2>
+    <ul>
+      <li>
+        Income: The total gross income earned by the user, including salaries,
+        wages, bonuses, etc.
+      </li>
+      <li>
+        Expenses: Allowable deductions or business expenses that reduce taxable
+        income, such as rent, utilities, or supplies.
+      </li>
+      <li>
+        Filing Status: The user’s tax filing status (e.g., single, married, head
+        of household). This impacts tax brackets and standard deductions.
+      </li>
+      <li>
+        Number of Dependents: The number of dependents (e.g., children or
+        relatives) the user claims, which can affect tax credits or deductions.
+      </li>
+      <li>
+        Tax Withholding: The amount of income tax already withheld from the
+        user’s paychecks throughout the year.
+      </li>
+      <li>
+        Other Income: Additional income not included in gross income, such as
+        interest, dividends, or rental income.
+      </li>
+      <li>
+        Tax Credits: Direct reductions of tax liability, such as credits for
+        education or child care.
+      </li>
+    </ul>
     <p class="help-text">Navigate to the tax form to get started.</p>
     <p class="signature">Made by Giazitzis Symeon</p>
     <button class="tax-form-button" @click="gotaxform">Go to Tax Form</button>
@@ -24,7 +55,7 @@ export default {
 
 <style scoped>
 .home-page {
-  background-color: rgb(172, 206, 190);
+  background-color: #accebe;
   margin: auto;
   width: 100vw;
   height: 100vh;
@@ -36,12 +67,31 @@ export default {
 }
 h1 {
   font-size: 2.5em;
-  margin-top: 100px;
+  margin-top: 50px;
+  margin-bottom: 0px;
   color: #333;
 }
 .text1 {
-  margin-top: 100px;
+  margin-top: 70px;
   font-size: 1.5em;
+  color: #000000;
+}
+h2 {
+  margin-top: 50px;
+  margin-bottom: 0px;
+  color: #333;
+}
+ul {
+  margin-top: 30px;
+  margin-bottom: 0px;
+  font-size: 1.2em;
+  color: #000000;
+}
+li {
+  margin-top: 0px;
+  margin-bottom: 10px;
+  font-size: 1em;
+  text-align: left;
   color: #000000;
 }
 .help-text {

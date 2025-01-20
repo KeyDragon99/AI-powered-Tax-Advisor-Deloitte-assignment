@@ -120,11 +120,14 @@ export default {
 
 <style scoped>
 .tax-form-page {
+  margin: auto;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 20px;
+  background-color: aquamarine;
 }
 h1 {
   font-size: 2.5em;
@@ -157,7 +160,7 @@ select {
   border-radius: 5px;
 }
 button {
-  background-color: #007bff;
+  background-color: #55a713;
   color: white;
   font-size: 1.2em;
   padding: 10px 20px;
@@ -166,7 +169,7 @@ button {
   cursor: pointer;
 }
 button:hover {
-  background-color: #0056b3;
+  background-color: #0a6d17;
 }
 
 .back-button {
@@ -174,11 +177,12 @@ button:hover {
   position: fixed;
   top: 25px;
   left: 50px;
-  background-color: #6c757d;
+  color: black;
+  background-color: #accebe;
   font-size: 1em;
 }
 .back-button:hover {
-  background-color: #5a6268;
+  background-color: #8eaa9d;
 }
 
 /* Modal Styles */
