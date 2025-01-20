@@ -10,22 +10,7 @@
           :id="field"
           :step="0.01"
           :min="0"
-          v-model.number="formData[field]"
-          :required="
-            field !== 'otherIncome' &&
-            field !== 'taxCredits' &&
-            !(
-              field === 'employmentIcome' ||
-              field === 'pensionIncome' ||
-              field === 'businessProfits'
-            ) &&
-            field !== 'rentalIncome' &&
-            field !== 'investmentIncome' &&
-            field !== 'medicalExpenses' &&
-            field !== 'educationExpenses' &&
-            field !== 'donations' &&
-            field !== 'taxWithheld'
-          "
+          v-model.number="myData[field]"
         />
         <input
           v-else-if="field === 'dependents'"
@@ -33,17 +18,27 @@
           :id="field"
           :step="1"
           :min="0"
-          v-model.number="formData[field]"
+          v-model.number="myData[field]"
         />
-        <select v-else :id="field" v-model="formData[field]" required>
+        <select v-else :id="field" v-model="myData[field]" required>
           <option value="">Select</option>
           <option value="single">Single</option>
-          <option value="marriedJoint">Married</option>
-          <option value="marriedSeparate">Head of Household</option>
+          <option value="marriedJoint">Married Joint</option>
+          <option value="marriedSeparate">Married Separate</option>
         </select>
       </div>
       <button type="submit">Submit</button>
     </form>
+
+    <!-- Right Side OpenAI Advisor Section -->
+    <div class="openai-advisor">
+      <h3>Would you like some assistance from our OpenAI advisor?</h3>
+      <textarea
+        v-model="myData.userComments"
+        placeholder="Add your comments or specific concerns here..."
+      ></textarea>
+      <button @click="askOpenAI">Ask Advisor</button>
+    </div>
 
     <button class="back-button" @click="goHome">Back to Home</button>
 
@@ -52,20 +47,33 @@
       <div class="modal-content">
         <h2>Submission Summary</h2>
         <p v-for="(label, field) in formLabels" :key="field">
-          <strong>{{ label }}:</strong> {{ formData[field] }}
+          <strong>{{ label }}:</strong> {{ myData[field] }}
         </p>
         <button @click="closeModal">Close</button>
       </div>
     </div> -->
     <!-- Modal 2-->
-    <div v-if="showResultsModal" class="modal-overlay">
+    <div v-if="showResultsModal" class="modal">
       <div class="modal-content">
         <h2>Tax Calculation Results</h2>
+        <p><strong>Total Income:</strong> {{ results.totalIncome }}</p>
+        <p><strong>Deductions:</strong> {{ results.deductions }}</p>
         <p><strong>Taxable Income:</strong> {{ results.taxableIncome }}</p>
         <p><strong>Tax:</strong> {{ results.tax }}</p>
-        <p><strong>Tax Owed:</strong> {{ results.taxOwed }}</p>
-        <p><strong>Refund:</strong> {{ results.refund }}</p>
+        <p><strong>Tax Credit:</strong> {{ results.taxCredit }}</p>
+        <p><strong>Total Tax:</strong> {{ results.totalTax }}</p>
+        <p><strong>Tax Withheld:</strong> {{ results.taxWithheld }}</p>
+        <p><strong>Net Tax:</strong> {{ results.netTaxDue }}</p>
         <button @click="closeResultsModal">Close</button>
+      </div>
+    </div>
+
+    <!-- Modal for OpenAI Response -->
+    <div v-if="showAIModal" class="modal">
+      <div class="modal-content">
+        <h2>OpenAI Advisor's Suggestions</h2>
+        <p v-html="formattedAdvice"></p>
+        <button @click="closeAIModal">Close</button>
       </div>
     </div>
   </div>
@@ -78,7 +86,8 @@ export default {
   name: "TaxFormPage",
   data() {
     return {
-      formData: {
+      myData: {
+        userComments: "",
         filingStatus: "",
         employmentIncome: 0.0,
         pensionIncome: 0.0,
@@ -87,11 +96,13 @@ export default {
         investmentIncome: 0.0,
         medicalExpenses: 0.0,
         educationExpenses: 0.0,
+        businessExpenses: 0.0,
         donations: 0.0,
         taxWithheld: 0.0,
         dependents: 0,
       },
       // showModal: false,
+      showAIModal: false,
       showResultsModal: false,
       results: {},
       formLabels: {
@@ -103,21 +114,43 @@ export default {
         investmentIncome: "Investment Income",
         medicalExpenses: "Medical Expenses",
         educationExpenses: "Education Expenses",
+        businessExpenses: "Business Expenses",
         donations: "Donations",
         taxWithheld: "Tax Withheld",
         dependents: "Dependents",
       },
     };
   },
+  computed: {
+    // Process the advice for HTML rendering
+    formattedAdvice() {
+      return this.results.advice
+        .replace(/\n/g, "<br>") // Replace newlines with <br>
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"); // Replace **text** with bold
+    },
+  },
   methods: {
     async handleSubmit() {
       // this.showModal = true;
       this.calculateTaxes();
     },
+    async askOpenAI() {
+      const apiUrl = "http://localhost:5000/tax-advice"; // Replace with your backend URL
+      axios
+        .post(apiUrl, this.myData)
+        .then((response) => {
+          this.results = response.data; // Store the API results
+          this.showAIModal = true; // Open the second modal
+        })
+        .catch((error) => {
+          console.error("Error generating AI answer:", error);
+          alert("Failed to generate an answer. Please try again later.");
+        });
+    },
     calculateTaxes() {
       const apiUrl = "http://localhost:5000/calculate-tax"; // Replace with your backend URL
       axios
-        .post(apiUrl, this.formData)
+        .post(apiUrl, this.myData)
         .then((response) => {
           this.results = response.data; // Store the API results
           this.showResultsModal = true; // Open the second modal
@@ -127,11 +160,15 @@ export default {
           alert("Failed to calculate taxes. Please try again later.");
         });
     },
+
     // closeModal() {
     //   this.showModal = false;
     // },
     closeResultsModal() {
       this.showResultsModal = false;
+    },
+    closeAIModal() {
+      this.showAIModal = false;
     },
     goHome() {
       this.$router.push("/");
@@ -195,6 +232,16 @@ button:hover {
   background-color: #0a6d17;
 }
 
+.openai-advisor {
+  width: 30%;
+  margin-left: 20px;
+}
+textarea {
+  width: 100%;
+  height: 100px;
+  margin: 10px 0;
+}
+
 .back-button {
   margin-top: 20px;
   position: fixed;
@@ -209,25 +256,33 @@ button:hover {
 }
 
 /* Modal Styles */
-.modal-overlay {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
+  z-index: 1000;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: block;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 .modal-content {
   background: white;
+  margin: 7% auto;
   padding: 20px;
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
   text-align: center;
+}
+.modal-content p {
+  font-family: "Arial", sans-serif;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #333;
 }
 .modal-content h2 {
   margin-bottom: 15px;

@@ -8,36 +8,52 @@
     <h2>Explanation of Each Input Item for the Tax Calculator</h2>
     <ul class="ul1">
       <li>
-        Income Sources:
+        <strong>Income Sources:</strong>
         <ul class="ul2">
-          <li>Employment Income: Salaries and wages.</li>
-          <li>Pension Income: Retirement benefits.</li>
+          <li><strong>Employment Income:</strong> Salaries and wages.</li>
+          <li><strong>Pension Income:</strong> Retirement benefits.</li>
           <li>
-            Business Profits: Income from self-employment or business
-            activities.
+            <strong>Business Profits:</strong> Income from self-employment or
+            business activities.
           </li>
-          <li>Rental Income: Earnings from property rentals.</li>
-          <li>Investment Income: Dividends, interest, etc.</li>
+          <li>
+            <strong>Rental Income:</strong> Earnings from property rentals.
+          </li>
+          <li><strong>Investment Income:</strong> Dividends, interest, etc.</li>
         </ul>
       </li>
       <li>
-        Deductions and Allowances:
+        <strong>Deductions and Allowances:</strong>
         <ul class="ul3">
-          <li>Medical Expenses: Certain medical costs may be deductible.</li>
-          <li>Education Expenses: Tuition fees for dependent children.</li>
           <li>
-            Donations: Charitable contributions to approved organizations.
+            <strong>Medical Expenses:</strong> Certain medical costs may be
+            deductible.
+          </li>
+          <li>
+            <strong>Education Expenses:</strong> Tuition fees for dependent
+            children.
+          </li>
+          <li>
+            <strong>Business Expenses:</strong> Expenses made in benefit of a
+            self-employed business are deductible.
+          </li>
+          <li>
+            <strong>Donations:</strong> Charitable contributions to approved
+            organizations.
           </li>
         </ul>
       </li>
       <li>
-        Filing Status: Options include Single, Married Filing Jointly, or
-        Married Filing Separately.
+        <strong>Filing Status:</strong> Options include Single, Married Filing
+        Jointly, or Married Filing Separately.
       </li>
-      <li>Tax Withheld: Total tax already withheld from income sources.</li>
       <li>
-        Dependents: Number of dependents, such as children, which can affect tax
-        calculations.
+        <strong>Tax Withheld:</strong> Total tax already withheld from income
+        sources.
+      </li>
+      <li>
+        <strong>Dependents:</strong> Number of dependents, such as children,
+        which can affect tax calculations.
       </li>
     </ul>
     <p class="help-text">Navigate to the tax form to get started.</p>
