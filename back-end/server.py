@@ -1,4 +1,3 @@
-import tkinter as tk
 from flask import Flask, request, jsonify
 from flask_restful import Api, Resource, reqparse, fields, marshal_with
 from flask_cors import CORS
