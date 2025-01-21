@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./front-end # The project folder for frontend
+      dockerfile: Dockerfile_frontend # The name of the Dockerfile
+    image: deloitte-app-frontend-image # Custom name for the image
+    ports:
+      - "8000:8000" # Map front-end service to localhost:8000
+    environment:
+      - OPENAI_API_KEY=OPENAI_API_KEY # Pass the openai key from the environment to the app
+
+  backend:
+    build:
+      context: ./back-end # The project folder for backend
+      dockerfile: Dockerfile_backend # The name of the Dockerfile
+    image: deloitte-app-backend-image # Custom name for the image
+    ports:
+      - "5000:5000" # Map back-end service to localhost:5000
+    environment:
+      - OPENAI_API_KEY=OPENAI_API_KEY # Pass the openai key from the environment to the app

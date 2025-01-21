@@ -2,9 +2,12 @@ from flask import Flask, request, jsonify
 from flask_restful import Api, Resource, reqparse, fields, marshal_with
 from flask_cors import CORS
 from openai import OpenAI
+from waitress import serve                                              
+import os
 
-with open('C:/Users/simos/Documents/GitHub/Deloitte_Assignment/back-end/key.txt', 'r') as file:
-    key = file.read()
+key = os.getenv("OPENAI_API_KEY")
+if not key:
+    raise ValueError("OpenAI API key is missing")
 
 client = OpenAI(
     api_key = key  # This is the default and can be omitted
@@ -201,5 +204,4 @@ if __name__ == "__main__":
 
     print("Server starting up!")
     print(f"Ip: {'0.0.0.0'}, Port: 5000")
-    from waitress import serve                                              
     serve(app, port=5000)    

@@ -29,29 +29,29 @@ cd my-vue-app
 npm install
 ```
 
-### Replace files
+## Replace files
 
 Replace the files in the new project and delete the remaining files from the project initialization as such:
 
-Replace/Add:
+### Replace/Add:
 
-./my-vue-app/public/favicon.png
-./my-vue-app/index.html
-./my-vue-app/src/router.js
-./my-vue-app/src/main.js
-./my-vue-app/src/App.vue
-./my-vue-app/src/components/HomePage.vue
-./my-vue-app/src/components/TaxFormPage.vue
+./my-vue-app/public/favicon.png <br>
+./my-vue-app/index.html <br>
+./my-vue-app/src/router.js <br>
+./my-vue-app/src/main.js <br>
+./my-vue-app/src/App.vue <br>
+./my-vue-app/src/components/HomePage.vue <br>
+./my-vue-app/src/components/TaxFormPage.vue <br>
 
-Delete:
+### Delete:
 
-./my-vue-app/src/components/HelloWorld.vue
-./my-vue-app/src/assets/vue.svg
-./my-vue-app/public/vite.svg
-./my-vue-app/src/style.css
-./my-vue-app/src/router/\*
+./my-vue-app/src/components/HelloWorld.vue <br>
+./my-vue-app/src/assets/vue.svg <br>
+./my-vue-app/public/vite.svg <br>
+./my-vue-app/src/style.css <br>
+./my-vue-app/src/router/\* <br>
 
-### Install additional libraries
+## Install additional libraries
 
 Run the following commands to install some necessary libraries:
 
@@ -63,13 +63,13 @@ npm install vue-router@4
 npm install axios
 ```
 
-### Compile and Hot-Reload for Development
+## Compile and Hot-Reload for Development
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Compile and Minify for Production
 
 This should build the frontend page in the folder /dist.
 
@@ -103,7 +103,7 @@ Then run in the dist folder:
 serve
 ```
 
-## back-end
+# back-end
 
 This part should help you understand how the backend API endpoints work.
 
@@ -125,8 +125,64 @@ This information includes: Total Income, Deductions, Taxable Income, Tax, Tax Cr
 In the case of the /tax-advice endpoint, the server expects again tax information and numbers, together with possible comments the user might have added.
 The data is manipulated and transformed so that it becomes a string input, which is then passed to the openai model.
 For the integration of the AI model, the library openai is used.
-A provided key is used to access the openai LLM (key is stored in another txt file for safety).
+A key is needed to access the openai LLM. For safety reasons, the key can be passed through environment variable which will temporary save it for the current prompt session.
+To define the key as a temporary environment variable you run:
+
+For cmd:
+
+```sh
+set OPENAI_API_KEY=your_openai_key_here
+```
+
+For PowerShell:
+
+```sh
+$env:OPENAI_API_KEY = "your_openai_key_here"
+```
+
 To establish connection with the AI model, a response chat-client is created through openai library, which takes multiple variables to help create the desired results.
 Among these variables is the option for the model to have predefined characteristics, in this case to be an "AI tax advisor".
 The user's request for advice is sent to the AI model and a generated answer is returned in the form of JSON.
 The desired text is extracted and returned to the frontend.
+
+# Dockerization
+
+For the dockerization of both frontend and backend we need docker. I am using windows so I downloaded Docker Desktop at https://www.docker.com/products/docker-desktop/.
+
+## Separate build and run
+
+To separately build and run the dockerfiles simply navigate to either **front-end** or **back-end** and run the following commands:
+
+### Frontend
+
+```sh
+docker build -f Dockerfile_frontend -t deloitte-app-frontend-image .
+```
+
+```sh
+docker run -p 8000:8000 deloitte-app-frontend-image
+```
+
+### Backend
+
+```sh
+docker build -f Dockerfile_backend -t deloitte-app-backend-image .
+```
+
+```sh
+docker run -p 5000:5000 --env OPENAI_API_KEY deloitte-app-backend-image
+```
+
+## Simultaneous build and run
+
+To build and run the two dockerfiles at the same time with out having to do each one separately, you can go where the docker-compose.yml file is and run:
+
+```sh
+docker-compose build
+```
+
+```sh
+docker-compose up
+```
+
+Before running the backend, always remember to define the openai key as environment variable.
