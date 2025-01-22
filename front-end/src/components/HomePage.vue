@@ -19,16 +19,11 @@
           <li>
             <strong>Rental Income:</strong> Earnings from property rentals.
           </li>
-          <li><strong>Investment Income:</strong> Dividends, interest, etc.</li>
         </ul>
       </li>
       <li>
         <strong>Deductions and Allowances:</strong>
         <ul class="ul3">
-          <li>
-            <strong>Medical Expenses:</strong> Certain medical costs may be
-            deductible.
-          </li>
           <li>
             <strong>Education Expenses:</strong> Tuition fees for dependent
             children.
@@ -36,10 +31,6 @@
           <li>
             <strong>Business Expenses:</strong> Expenses made in benefit of a
             self-employed business are deductible.
-          </li>
-          <li>
-            <strong>Donations:</strong> Charitable contributions to approved
-            organizations.
           </li>
         </ul>
       </li>

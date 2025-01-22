@@ -23,15 +23,13 @@ parsing_items = [
     "pensionIncome", 
     "businessProfits", 
     "rentalIncome", 
-    "investmentIncome", 
-    "medicalExpenses", 
     "educationExpenses", 
     "businessExpenses", 
-    "donations", 
     "taxWithheld"
 ]
 
 rqp = reqparse.RequestParser()   
+rqp.add_argument("filingStatus", type=str, choices=["single", "marriedJoint", "marriedSeparate"], required=True, help="Filing status is required")
 for item in parsing_items:                                       
     rqp.add_argument(item, type=float, default=0.0) 
 rqp.add_argument("dependents", type=int, default=0)
@@ -48,10 +46,9 @@ tax_fields = {
     "totalIncome": fields.Float,
     "deductions": fields.Float,
     "taxableIncome": fields.Float,
-    "tax": fields.Float,
-    "taxCredit": fields.Float,
-    "totalTax": fields.Float,
+    "grossTax": fields.Float,
     "taxWithheld": fields.Float,
+    "taxCredit": fields.Float,
     "netTaxDue": fields.Float,
 }
 
@@ -64,16 +61,14 @@ class TaxCalculator(Resource):
 
             # Extract input data
             # Income data
+            filing_status = args.get('filingStatus')
             employment_income = args.get('employmentIncome')
             pension_income = args.get('pensionIncome')
             business_profits = args.get('businessProfits')
             rental_income = args.get('rentalIncome')
-            investment_income = args.get('investmentIncome')
             # Expenses data
-            medical_expenses = args.get('medicalExpenses')
             education_expenses = args.get('educationExpenses')
             business_expenses = args.get('businessExpenses')
-            donations = args.get('donations')
             # Tax withheld data
             tax_withheld = args.get('taxWithheld')
             # Dependents data
@@ -84,51 +79,47 @@ class TaxCalculator(Resource):
                 employment_income +
                 pension_income +
                 business_profits +
-                rental_income +
-                investment_income
+                rental_income 
             )
 
             # Deductible expenses
             deductions = (
-                medical_expenses + 
                 education_expenses + 
-                business_expenses + 
-                donations
+                business_expenses
             )
             taxable_income = max(0, total_income - deductions)
 
             # Calculate income tax
             if taxable_income <= 10000:
-                tax = taxable_income * 0.09
+                gross_tax = taxable_income * 0.09
             elif taxable_income <= 20000:
-                tax = 10000 * 0.09 + (taxable_income - 10000) * 0.22
+                gross_tax = 10000 * 0.09 + (taxable_income - 10000) * 0.22
             elif taxable_income <= 30000:
-                tax = 10000 * 0.09 + 10000 * 0.22 + (taxable_income - 20000) * 0.28
+                gross_tax = 10000 * 0.09 + 10000 * 0.22 + (taxable_income - 20000) * 0.28
             else:
-                tax = 10000 * 0.09 + 10000 * 0.22 + 10000 * 0.28 + (taxable_income - 30000) * 0.36
+                gross_tax = 10000 * 0.09 + 10000 * 0.22 + 10000 * 0.28 + (taxable_income - 30000) * 0.36
 
             # Apply tax credits
-            base_credit = 1900
-            if taxable_income > 12000:
-                base_credit = max(0, base_credit - (taxable_income - 12000) * 0.1)
-            credit_per_dependent = 50
-            tax_credit = base_credit + (credit_per_dependent * dependents)
-
-            # Final tax calculation
-            total_tax = max(0, tax - tax_credit)
+            if filing_status != "single" or dependents > 0:
+                tax_credit = 777        # Initial tax credits
+                credit_scales = [33, 123, 243, 563]
+                extra = 220
+                if dependents > 0 and dependents < 5:
+                    tax_credit += credit_scales[dependents-1]
+                elif dependents >= 5:
+                    tax_credit += credit_scales[-1] + extra * (dependents - len(credit_scales))
 
             # Calculate net tax due
-            net_tax_due = max(0, total_tax - tax_withheld)
+            net_tax_due = max(0, gross_tax - tax_withheld - tax_credit)
             
             # Response
             response = {
                 "totalIncome": total_income,
                 "deductions": deductions,
                 "taxableIncome": taxable_income,
-                "tax": tax,
-                "taxCredit": tax_credit,
-                "totalTax": total_tax,
+                "grossTax": gross_tax,
                 "taxWithheld": tax_withheld,
+                "taxCredit": tax_credit,
                 "netTaxDue": net_tax_due
             }
 
@@ -161,7 +152,7 @@ class openAIAdvisor(Resource):
                     {"role": "user", "content": prompt}     # The user's input
                 ],
                 temperature=0.7,
-                max_tokens=500
+                max_tokens=750
             )
             # Extract and return OpenAI response
             advice = response.choices[0].message.content   # Navigate through gpt's json response and get the content we need
