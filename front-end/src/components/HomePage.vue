@@ -3,13 +3,14 @@
     <h1>My Tax Calculator</h1>
     <p class="text1">
       Calculate your taxes fast and efficiently. Get suggestions and advice from
-      our AI powered advisor.
+      our AI-powered advisor.
     </p>
+
     <h2>Explanation of Each Input Item for the Tax Calculator</h2>
-    <ul class="ul1">
+    <ul class="input-explanation">
       <li>
         <strong>Income Sources:</strong>
-        <ul class="ul2">
+        <ul class="nested-list">
           <li><strong>Employment Income:</strong> Salaries and wages.</li>
           <li><strong>Pension Income:</strong> Retirement benefits.</li>
           <li>
@@ -23,7 +24,7 @@
       </li>
       <li>
         <strong>Deductions and Allowances:</strong>
-        <ul class="ul3">
+        <ul class="nested-list">
           <li>
             <strong>Education Expenses:</strong> Tuition fees for dependent
             children.
@@ -43,12 +44,13 @@
         sources.
       </li>
       <li>
-        <strong>Dependents:</strong> Number of dependents, such as children,
-        which can affect tax calculations.
+        <strong>Dependents:</strong> Number of dependents, such as children.
       </li>
     </ul>
+
     <p class="help-text">Navigate to the tax form to get started.</p>
     <p class="signature">Made by Giazitzis Symeon</p>
+
     <button class="tax-form-button" @click="gotaxform">Go to Tax Form</button>
   </div>
 </template>
@@ -65,72 +67,65 @@ export default {
 </script>
 
 <style scoped>
+/* General Page Layout */
 .home-page {
   background-color: #accebe;
-  margin: auto;
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 0px;
+  padding: 0;
 }
+
+/* Header Styles */
 h1 {
   font-size: 2.5em;
-  margin-top: 50px;
-  margin-bottom: 0px;
+  margin: 50px 0 0;
   color: #333;
 }
+
 .text1 {
   margin-top: 70px;
   font-size: 1.5em;
-  color: #000000;
+  color: #000;
 }
+
+/* Explanation Section */
 h2 {
   margin-top: 10px;
-  margin-bottom: 0px;
   color: #333;
 }
-.ul1 {
-  margin-top: 30px;
-  margin-bottom: 0px;
-  font-size: 1.5em;
-  color: #000000;
-}
-.ul2 {
+
+.input-explanation {
   margin-top: 10px;
-  margin-bottom: 0px;
-  font-size: 1.1em;
-  color: #000000;
-}
-.ul3 {
-  margin-top: 10px;
-  margin-bottom: 0px;
-  font-size: 1.1em;
-  color: #000000;
-}
-li {
-  margin-top: 0px;
-  margin-bottom: 10px;
-  font-size: 0.9em;
+  margin-bottom: 0;
+  font-size: 1.6em;
+  color: #000;
   text-align: left;
-  color: #000000;
 }
+
+.nested-list {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 1.1em;
+  color: #000;
+}
+
+li {
+  font-size: 0.95em;
+  margin-bottom: 10px;
+}
+
+/* Footer and Button */
 .help-text {
   margin-top: 20px;
   margin-bottom: 0px;
   font-size: 1.5em;
-  color: #000000;
+  color: #000;
 }
-.signature {
-  font-size: 0.8em;
-  font-style: italic;
-  position: fixed;
-  right: 50px;
-  bottom: 20px;
-  color: #0e3606;
-}
+
 .tax-form-button {
   background-color: #55a713;
   color: white;
@@ -141,7 +136,17 @@ li {
   cursor: pointer;
   margin-top: 13px;
 }
+
 .tax-form-button:hover {
   background-color: #0a6d17;
+}
+
+.signature {
+  font-size: 0.8em;
+  font-style: italic;
+  position: absolute;
+  right: 50px;
+  bottom: 20px;
+  color: #0e3606;
 }
 </style>

@@ -1,7 +1,15 @@
 __pycache__/
-prefect-env/
 .prefectignore
 .idea/
 *.txt
 *.tsv
 *.csv
+/front-end/node_modules/
+/front-end/dist/*
+package.json
+package-lock.json
+jsconfig.json
+index.html
+vite.config.js
+/front-end/.vscode/*
+server.py
