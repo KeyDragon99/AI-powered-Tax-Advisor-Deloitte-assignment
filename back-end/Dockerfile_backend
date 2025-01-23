@@ -4,7 +4,7 @@ FROM python:3.12.4
 WORKDIR /app
 
 # Copy code files
-COPY server.py ./
+COPY . .
 
 # Install necessary libraries for the code to run
 RUN pip install Flask Flask-RESTful Flask-Cors openai waitress
@@ -13,4 +13,4 @@ RUN pip install Flask Flask-RESTful Flask-Cors openai waitress
 EXPOSE 5000
 
 # Command to run the backend server
-CMD ["python", "./server.py"]
+CMD ["python", "./main.py"]

@@ -8,8 +8,6 @@ services:
     image: deloitte-app-frontend-image # Custom name for the image
     ports:
       - "8000:8000" # Map front-end service to localhost:8000
-    environment:
-      - OPENAI_API_KEY=OPENAI_API_KEY # Pass the openai key from the environment to the app
 
   backend:
     build:

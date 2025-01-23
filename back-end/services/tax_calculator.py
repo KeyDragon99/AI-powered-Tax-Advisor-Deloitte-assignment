@@ -26,7 +26,7 @@ def calculate_tax(args):
 
     tax_credit = 0
     if filing_status != "single" or dependents > 0:
-        tax_credit = 777 + [33, 123, 243, 563][dependents-1]
+        tax_credit = 777 + [33, 123, 243, 563, 0][min(4, dependents)-1]
         if dependents > 4:
             tax_credit += 220 * (dependents - 4)
 
