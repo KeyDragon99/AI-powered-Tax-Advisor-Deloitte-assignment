@@ -87,8 +87,8 @@ h1 {
 }
 
 .text1 {
-  margin-top: 70px;
-  font-size: 1.5em;
+  margin-top: 55px;
+  font-size: 1.8em;
   color: #000;
 }
 
@@ -132,9 +132,9 @@ li {
   font-size: 1.2em;
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
-  margin-top: 13px;
+  margin-top: 20px;
 }
 
 .tax-form-button:hover {

@@ -47,7 +47,9 @@
     </div>
 
     <!-- Navigation Button -->
-    <button class="back-button" @click="goHome">Back to Home</button>
+    <button class="back-button" @click="goHome">
+      <strong>Back to Home</strong>
+    </button>
 
     <!-- Tax Calculation Results Modal -->
     <div v-if="showResultsModal" class="tax-modal">
@@ -291,11 +293,13 @@ button:hover {
 .back-button {
   margin-top: 20px;
   position: fixed;
+  height: auto;
+  width: auto;
   top: 25px;
   left: 50px;
   color: black;
   background-color: #accebe;
-  font-size: 1em;
+  font-size: 1.1em;
 }
 
 .back-button:hover {
