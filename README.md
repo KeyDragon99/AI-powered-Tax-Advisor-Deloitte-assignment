@@ -204,3 +204,56 @@ docker-compose up
 ```
 
 Before running the backend, always remember to define the openai key as an environment variable.
+
+# DevOps CI/CD with GitHub Actions
+
+In order to create a CI pipeline with GitHub Actions, for automated testing create a directory at **.github/workflows**  
+in there create a YAML file **ci.yml**. This file will create a pipeline that automatically executes a given testing file,
+on every push that's performed to the main branch of the repository.
+To the YAML file is defined, (similarly to docker): the files that will be tested, the libraries/framework that are used to run the app, as well as
+the main languages that the frontend and the backend were developed with.
+Two separate testing files were made for both the frontend and backend: **frontend_test.specs.js** and **backend_test.py**.
+After the testing is complete, if all tests are successful, the defined files will be sent to a remote server through ssh connection.
+There, any running process of older version of those files (if exist) is stopped and the old files are replaced. Finally the newer version files
+are executed. All of these are performed in a maner that is also defined in the YAML file (e.g. docker-compose down/up).
+
+## Front-end
+
+The setup for the frontend test file required installing the following libraries:
+
+```sh
+npm install @testing-library/vue vitest @testing-library/jest-dom jsdom --save-dev
+```
+
+Next create a directory at **./front-end/test/** and there create a file **setup.js**.
+In that file add: import `"@testing-library/jest-dom";`.
+In **vite.config.js** add in the **defineConfig** function:
+
+    `test: {`<br>
+        `globals: true,`<br>
+        `environment: "jsdom",`<br>
+        `setupFiles: "./test/setup.js", // Add this line`<br>
+    `},`<br>
+
+Lastly add in the **package.json** file in the **scripts** the following line:
+`"test": "vitest"`
+
+Now you can run the **frontend_test.spec.js** code with the command (for development phase):
+
+```sh
+npm run test
+```
+
+## Back-end
+
+The backend setup is simpler and faster. Install to your virtual environment the library pytest:
+
+```sh
+pip install pytest
+```
+
+now you can run the **backend_test.py** code.
+
+## Automated testing with CI pipeline
+
+    With

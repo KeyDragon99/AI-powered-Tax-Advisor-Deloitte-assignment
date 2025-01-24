@@ -1,0 +1,104 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+          - 5000:5000
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+
+      - name: Install backend dependencies
+        run: |
+          cd back-end
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run backend tests
+        run: |
+          cd back-end
+          source venv/bin/activate
+          pytest backend_test.py
+
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22.11.0"
+
+      - name: Install frontend dependencies
+        run: |
+          cd front-end
+          npm install
+
+      - name: Run frontend tests
+        run: |
+          cd front-end
+          npm run test frontend_test.spec.js
+
+  deploy:
+    needs: [test, frontend]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Deploy
+        run: |
+          echo "Deploying the application..."
+
+    #   - name: Install SSH Client
+    #     run: sudo apt-get install -y openssh-client
+
+    #   - name: Copy files to server
+    #     env:
+    #       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    #       REMOTE_USER: ${{ secrets.REMOTE_USER }}
+    #       REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+    #     run: |
+    #       echo "$SSH_PRIVATE_KEY" > key.pem
+    #       chmod 600 key.pem
+    #       scp -i key.pem -r ./* $REMOTE_USER@$REMOTE_HOST:/path/to/your/app
+
+    #   - name: Deploy
+    #     env:
+    #       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    #       REMOTE_USER: ${{ secrets.REMOTE_USER }}
+    #       REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+    #     run: |
+    #       ssh -i key.pem $REMOTE_USER@$REMOTE_HOST << 'EOF'
+    #       cd /path/to/your/app
+    #       docker-compose down
+    #       docker-compose up -d --build
+    #       EOF
