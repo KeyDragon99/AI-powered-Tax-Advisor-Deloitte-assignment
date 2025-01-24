@@ -1,4 +1,4 @@
-# front-end
+# Front-end
 
 This template should help get you started developing with Vue 3 in Vite.
 Make sure you have installed npm and Node.js in your machine.
@@ -50,6 +50,13 @@ Replace the files in the new project and delete the remaining files from the pro
 ./my-vue-app/public/vite.svg <br>
 ./my-vue-app/src/style.css <br>
 ./my-vue-app/src/router/\* <br>
+
+## Brief Overview of the files for the front-end
+
+**main.js** uses **App.vue** to initialize the app.<br>
+**router.js** is used in the main to define the routes (URLs) for the two pages of our app.<br>
+**styles.css** is used to define global styles in the App.<br>
+Lastly the code for the two pages of the app is in the **HomePage.vue** and **TaxFormPage.vue**.<br>
 
 ## Install additional libraries
 
@@ -103,30 +110,41 @@ Then run in the dist folder:
 serve
 ```
 
-# back-end
+# Back-end
 
 This part should help you understand how the backend API endpoints work.
 
-There are two API endpoints, the cal_tax inside TaxCalculator and advgenerator inside openAIAdvisor.
+The backend was developed using Python. For the APIs Flask RESTful was used as well as OpenAI for the AI model integration in one of the APIs.
+There are two API endpoints, the cal_tax inside TaxCalculator and advgenerator inside OpenAIAdvisor classes, both of which are located in the routes.py file.
 The API endpoints are: '/calculate-tax' and '/tax-advice' respectively and the base URL is 'http://localhost:5000'.
 HTTP requests with attached JSON data are sent to either one of those two endpoints.
-To establish a valid communication, the base URL and one of the endpoint are combined into one URL, which is where the server expects to receive data.
+Communication is established through the combination of the base URL and one of the endpoints into one URL, which is where the server expects to receive data.
+
+## Brief Overview of the files for the front-end
+
+**init.py**: Responsible for initializing the Flask app and extensions.<br>
+**routes.py**: Defines routes and attaches resources.<br>
+**parsers.py**: Handles request parsing logic.<br>
+**models.py**: Defines response models for marshaling.<br>
+**tax_calculator.py**: Contains the core tax calculation logic.<br>
+**utils.py**: Utility functions for shared tasks.<br>
+**main.py**: application entry point.<br>
+**requirements.txt**: library/framework dependencies.<br>
 
 ## Tax calculator docs
 
 In the case of the /calculate-tax endpoint, the server expects tax information and numbers.
-Inside the API the server will use a formula to calculate the tax every time.
+Inside the API, the server will use a formula to calculate the tax every time.
 The greek taxing system is used in this case as the formula.
-The useful information is then returned back to the frontend in the form of JSON.
-This information includes: Total Income, Deductions, Taxable Income, Tax, Tax Credit, Total Tax, Tax Withheld and Net Tax.
+The useful information is then returned back to the frontend in JSON format.
+This information includes: Total Income, Deductions, Taxable Income, Gross Tax, Tax Withheld, Tax Credit, and Net Tax Due.
 
 ## AI advisor docs for taxes
 
 In the case of the /tax-advice endpoint, the server expects again tax information and numbers, together with possible comments the user might have added.
-The data is manipulated and transformed so that it becomes a string input, which is then passed to the openai model.
-For the integration of the AI model, the library openai is used.
-A key is needed to access the openai LLM. For safety reasons, the key can be passed through environment variable which will temporary save it for the current prompt session.
-To define the key as a temporary environment variable you run:
+The data is manipulated and transformed so that it becomes a string input, which is then passed to the openai client model.
+A key is needed to access the openai LLM. For safety reasons, the key is passed through an environment variable which will temporary save it for the current cmd prompt session.
+To define the key as a temporary environment variable you run:<br>
 
 For cmd:
 
@@ -142,12 +160,12 @@ $env:OPENAI_API_KEY = "your_openai_key_here"
 
 To establish connection with the AI model, a response chat-client is created through openai library, which takes multiple variables to help create the desired results.
 Among these variables is the option for the model to have predefined characteristics, in this case to be an "AI tax advisor".
-The user's request for advice is sent to the AI model and a generated answer is returned in the form of JSON.
+The user's request for advice is sent to the AI model and a generated answer is returned in JSON format.
 The desired text is extracted and returned to the frontend.
 
 # Dockerization
 
-For the dockerization of both frontend and backend we need docker. I am using windows so I downloaded Docker Desktop at https://www.docker.com/products/docker-desktop/.
+For the dockerization of both frontend and backend we need docker. For windows Docker Desktop can be downloaded at https://www.docker.com/products/docker-desktop/.
 
 ## Separate build and run
 
@@ -175,7 +193,7 @@ docker run -p 5000:5000 --env OPENAI_API_KEY deloitte-app-backend-image
 
 ## Simultaneous build and run
 
-To build and run the two dockerfiles at the same time with out having to do each one separately, you can go where the docker-compose.yml file is and run:
+To build and run the two dockerfiles at the same time with out having to do each one separately, you can navigate where the docker-compose.yml file is and run:
 
 ```sh
 docker-compose build
@@ -185,4 +203,4 @@ docker-compose build
 docker-compose up
 ```
 
-Before running the backend, always remember to define the openai key as environment variable.
+Before running the backend, always remember to define the openai key as an environment variable.
