@@ -13,3 +13,4 @@ index.html
 vite.config.js
 /front-end/.vscode/*
 server.py
+*.pptx
