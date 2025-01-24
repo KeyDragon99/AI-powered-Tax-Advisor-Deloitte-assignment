@@ -6,8 +6,6 @@ __pycache__/
 *.csv
 /front-end/node_modules/
 /front-end/dist/*
-package.json
-package-lock.json
 jsconfig.json
 index.html
 vite.config.js
