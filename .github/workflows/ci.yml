@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
 
     services:
@@ -68,7 +68,7 @@ jobs:
           npm run test frontend_test.spec.js
 
   deploy:
-    needs: [test, frontend]
+    needs: [backend, frontend]
     runs-on: ubuntu-latest
 
     steps:
@@ -78,6 +78,7 @@ jobs:
         run: |
           echo "Deploying the application..."
 
+    # Uncomment for connection
     #   - name: Install SSH Client
     #     run: sudo apt-get install -y openssh-client
 
