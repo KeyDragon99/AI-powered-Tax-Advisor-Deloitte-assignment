@@ -215,11 +215,15 @@ the main languages that the frontend and the backend were developed with.
 Two separate testing files were made for both the frontend and backend: **frontend_test.specs.js** and **backend_test.py**.
 After the testing is complete, if all tests are successful, the defined files will be sent to a remote server through ssh connection.
 There, any running process of older version of those files (if exist) is stopped and the old files are replaced. Finally the newer version files
-are executed. All of these are performed in a maner that is also defined in the YAML file (e.g. docker-compose down/up).
+are executed. All of these are performed in a manner that is also defined in the YAML file (e.g. docker-compose down/up).
+You need to define the OpenAI key for the backend AI API at the repository's secret variables.<br>
+To connect to a remote ssh server and perform the steps mentioned above, you need to uncomment the deployment (last section of the YAML file),
+and fill in the actual path to the app at the server and also define at GITHUB as secrets the **SSH_PRIVATE_KEY**, **REMOTE_USER**, **REMOTE_HOST**.
+These are the private-key (password), the username and the IP adress of the server in order to login.
 
-## Front-end
+### Front-end
 
-The setup for the frontend test file required installing the following libraries:
+The setup for the frontend test file requires installing the following libraries:
 
 ```sh
 npm install @testing-library/vue vitest @testing-library/jest-dom jsdom --save-dev
@@ -229,11 +233,11 @@ Next create a directory at **./front-end/test/** and there create a file **setup
 In that file add: import `"@testing-library/jest-dom";`.
 In **vite.config.js** add in the **defineConfig** function:
 
-    `test: {`<br>
-        `globals: true,`<br>
-        `environment: "jsdom",`<br>
-        `setupFiles: "./test/setup.js", // Add this line`<br>
-    `},`<br>
+    test: {
+        globals: true,
+        environment: "jsdom",
+        setupFiles: "./test/setup.js", // Add this line
+    },
 
 Lastly add in the **package.json** file in the **scripts** the following line:
 `"test": "vitest"`
@@ -244,7 +248,7 @@ Now you can run the **frontend_test.spec.js** code with the command (for develop
 npm run test
 ```
 
-## Back-end
+### Back-end
 
 The backend setup is simpler and faster. Install to your virtual environment the library pytest:
 
@@ -254,6 +258,4 @@ pip install pytest
 
 now you can run the **backend_test.py** code.
 
-## Automated testing with CI pipeline
-
-    With
+These two last sections are for simple local workflow testing. You only need the libraries and the files to work with it.
