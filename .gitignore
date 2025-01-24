@@ -1,14 +1,10 @@
 __pycache__/
 .prefectignore
 .idea/
-*.txt
 *.tsv
 *.csv
 /front-end/node_modules/
 /front-end/dist/*
-jsconfig.json
-index.html
-vite.config.js
 /front-end/.vscode/*
 server.py
 *.pptx
