@@ -44,7 +44,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd back-end
-          source venv/bin/activate
+          source myvenv/bin/activate
           pytest backend_test.py
 
   frontend:
