@@ -15,14 +15,16 @@ def calculate_tax(args):
     deductions = education_expenses + business_expenses
     taxable_income = max(0, total_income - deductions)
 
-    if taxable_income <= 10000:
-        gross_tax = taxable_income * 0.09
-    elif taxable_income <= 20000:
-        gross_tax = 10000 * 0.09 + (taxable_income - 10000) * 0.22
-    elif taxable_income <= 30000:
-        gross_tax = 10000 * 0.09 + 10000 * 0.22 + (taxable_income - 20000) * 0.28
-    else:
-        gross_tax = 10000 * 0.09 + 10000 * 0.22 + 10000 * 0.28 + (taxable_income - 30000) * 0.36
+    brackets = [(10000, 0.09), (10000, 0.22), (10000, 0.28), (10000, 0.36), (float('inf'), 0.44)]
+    gross_tax = 0
+    remaining_income = taxable_income
+    for bracket, rate in brackets:
+        if remaining_income > bracket:
+            gross_tax += bracket * rate
+            remaining_income -= bracket
+        else:
+            gross_tax += remaining_income * rate
+            break
 
     tax_credit = 0
     if filing_status != "single" or dependents > 0:

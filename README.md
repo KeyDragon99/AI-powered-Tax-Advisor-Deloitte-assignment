@@ -70,6 +70,10 @@ npm install vue-router@4
 npm install axios
 ```
 
+```sh
+npm install marked
+```
+
 ## Compile and Hot-Reload for Development
 
 ```sh
@@ -114,13 +118,44 @@ serve
 
 This part should help you understand how the backend API endpoints work.
 
-The backend was developed using Python. For the APIs Flask RESTful was used as well as OpenAI for the AI model integration in one of the APIs.
+The backend was developed using Python.
+A virtual environment was created using venv from python's prebuilt tool.
+
+## The environment
+
+To make the environment run:
+
+```sh
+python -m venv myenv
+```
+
+This will make a new environment in the current folder you are in named **"myenv"**. To install any packages first activate it running:
+
+For powershell:
+
+```sh
+myenv/Scripts/Activate.ps1
+```
+
+For cmd:
+
+```sh
+myenv/Scripts/activate
+```
+
+For the package installation run:
+
+```sh
+pip install packagename
+```
+
+For the APIs Flask RESTful was used as well as OpenAI for the AI model integration in one of the APIs.
 There are two API endpoints, the cal_tax inside TaxCalculator and advgenerator inside OpenAIAdvisor classes, both of which are located in the routes.py file.
 The API endpoints are: '/calculate-tax' and '/tax-advice' respectively and the base URL is 'http://localhost:5000'.
 HTTP requests with attached JSON data are sent to either one of those two endpoints.
 Communication is established through the combination of the base URL and one of the endpoints into one URL, which is where the server expects to receive data.
 
-## Brief Overview of the files for the front-end
+## Brief Overview of the files for the back-end
 
 **init.py**: Responsible for initializing the Flask app and extensions.<br>
 **routes.py**: Defines routes and attaches resources.<br>
@@ -162,6 +197,14 @@ To establish connection with the AI model, a response chat-client is created thr
 Among these variables is the option for the model to have predefined characteristics, in this case to be an "AI tax advisor".
 The user's request for advice is sent to the AI model and a generated answer is returned in JSON format.
 The desired text is extracted and returned to the frontend.
+
+## Library documentation
+
+To save the libraries used in the current environment in a txt file named requirements, run:
+
+```sh
+pip freeze > requirements.txt
+```
 
 # Dockerization
 

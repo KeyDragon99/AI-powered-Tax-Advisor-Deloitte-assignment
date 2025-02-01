@@ -1,11 +1,12 @@
 from app.parsers import tax_parser, advice_parser
 from app.models import tax_fields
-from flask_restful import Resource, marshal_with
-from services.tax_calculator import calculate_tax
 from app.utils import generate_prompt
+from services.tax_calculator import calculate_tax
+
+from flask_restful import Resource, marshal_with
+from flask import jsonify
 from openai import OpenAI
 import os
-from flask import request, jsonify
 
 # OpenAI client setup
 key = os.getenv("OPENAI_API_KEY")
@@ -25,8 +26,8 @@ class TaxCalculator(Resource):
             args = tax_parser.parse_args()
             response = calculate_tax(args)
             return response, 200
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
+        except Exception:
+            return {'error': 'There was an error calculating the taxes, please try again later.'}, 500
 
 class OpenAIAdvisor(Resource):
     def post(self):
@@ -46,5 +47,5 @@ class OpenAIAdvisor(Resource):
             )
             advice = response.choices[0].message.content
             return {'advice': advice}, 200
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
+        except Exception:
+            return {'error': 'There was an error fetching an answer from the LLM, please try again later.'}, 500

@@ -3,7 +3,10 @@ from waitress import serve
 
 app = create_app()
 
+port = 5000
+ip = '0.0.0.0'
+
 if __name__ == "__main__":
     print("Server starting up!")
-    print(f"Ip: {'0.0.0.0'}, Port: 5000")
-    serve(app, port=5000)
+    print(f"Ip: {ip}, Port: {port}")
+    serve(app, host=ip, port=port)

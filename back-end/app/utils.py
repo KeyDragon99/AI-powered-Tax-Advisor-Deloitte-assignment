@@ -4,9 +4,9 @@ def generate_prompt(tax_data, comments):
         return (
             f"Here is the user's tax-related data:\n{tax_data_str}\n\n"
             f"The user has also shared the following comments:\n{comments}\n\n"
-            "Based on this information, please provide personalized suggestions and advice regarding their taxes."
+            "Based on this information, provide personalized suggestions and advice regarding their taxes."
         )
     return (
         f"Here is the user's tax-related data:\n{tax_data_str}\n\n"
-        "Based on this information, please provide personalized suggestions and advice regarding their taxes."
+        "Based on this information, provide personalized suggestions and advice regarding their taxes."
     )

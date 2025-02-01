@@ -8,3 +8,5 @@ __pycache__/
 /front-end/.vscode/*
 server.py
 *.pptx
+*.jpg
+deloitte_assignment

@@ -87,7 +87,7 @@
     <div v-if="showAIModal" class="ai-modal">
       <div class="ai-modal-content">
         <h2>OpenAI Advisor's Suggestions</h2>
-        <p v-html="formattedAdvice"></p>
+        <p v-html="compiledMarkdown"></p>
         <button @click="closeAIModal">Close</button>
       </div>
     </div>
@@ -98,6 +98,9 @@
 
 <script>
 import axios from "axios";
+import { marked } from "marked";
+
+const port = import.meta.env.VITE_API_PORT;
 
 export default {
   name: "TaxFormPage",
@@ -131,12 +134,15 @@ export default {
       },
     };
   },
+  props: {
+    markdownText: {
+      type: String,
+      required: true,
+    },
+  },
   computed: {
-    formattedAdvice() {
-      return this.results.advice
-        .replace(/\n/g, "<br>") // Replace newlines with <br>
-        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Replace **text** with bold
-        .replace(/: /g, ": <br>");
+    compiledMarkdown() {
+      return marked(this.results.advice);
     },
   },
   methods: {
@@ -145,7 +151,7 @@ export default {
     },
     async askOpenAI() {
       try {
-        const apiUrl = "http://localhost:5000/tax-advice";
+        const apiUrl = `http://localhost:${port}/tax-advice`;
         const response = await axios.post(apiUrl, this.myData);
         this.results = response.data;
         this.showAIModal = true;
@@ -156,7 +162,7 @@ export default {
     },
     async calculateTaxes() {
       try {
-        const apiUrl = "http://localhost:5000/calculate-tax";
+        const apiUrl = `http://localhost:${port}/calculate-tax`;
         const response = await axios.post(apiUrl, this.myData);
         this.results = response.data;
         this.showResultsModal = true;

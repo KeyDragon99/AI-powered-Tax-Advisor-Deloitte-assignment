@@ -7,10 +7,10 @@ WORKDIR /app
 COPY . .
 
 # Install necessary libraries for the code to run
-RUN pip install Flask Flask-RESTful Flask-Cors openai waitress
+RUN pip install -r requirements.txt
 
 # Expose port
 EXPOSE 5000
 
 # Command to run the backend server
-CMD ["python", "./main.py"]
+CMD ["python","-u", "./main.py"]
